@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f6f6f6;
+  color: #222;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: #222;
+}
+
+.header a,
+.header span {
+  color: white;
+  text-decoration: none;
+}
+
+.header nav {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 360px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+input,
+button {
+  padding: 8px;
+  font-size: 1rem;
+}
+
+.error {
+  color: #c00;
+}
