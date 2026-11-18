@@ -1,5 +1,6 @@
 import express from "express";
 import authRoutes from "./routes/auth.js";
+import productRoutes from "./routes/products.js";
 
 if (!process.env.JWT_SECRET) {
   console.error("Falta JWT_SECRET en el archivo .env");
@@ -16,6 +17,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 
 // Cualquier otra ruta /api que no exista.
 app.use("/api", (_req, res) => {
