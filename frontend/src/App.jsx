@@ -7,6 +7,11 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import AdminProductsPage from "./pages/AdminProductsPage.jsx";
 import AdminProductFormPage from "./pages/AdminProductFormPage.jsx";
+import CartPage from "./pages/CartPage.jsx";
+import CheckoutSuccessPage from "./pages/CheckoutSuccessPage.jsx";
+import CheckoutCancelPage from "./pages/CheckoutCancelPage.jsx";
+import OrdersPage from "./pages/OrdersPage.jsx";
+import OrderDetailPage from "./pages/OrderDetailPage.jsx";
 
 export default function App() {
   const { user, loading, logout } = useAuth();
@@ -25,6 +30,8 @@ export default function App() {
             <>
               {/* El link solo se muestra a ADMIN, pero la protección real está en el backend */}
               {user.role === "ADMIN" && <Link to="/admin/products">Admin</Link>}
+              <Link to="/cart">Carrito</Link>
+              <Link to="/orders">Mis órdenes</Link>
               <span>
                 {user.email} ({user.role})
               </span>
@@ -45,6 +52,48 @@ export default function App() {
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout/success"
+            element={
+              <ProtectedRoute>
+                <CheckoutSuccessPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout/cancel"
+            element={
+              <ProtectedRoute>
+                <CheckoutCancelPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <OrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetailPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/admin/products"

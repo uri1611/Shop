@@ -3,12 +3,21 @@ import multer from "multer";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
 import adminRoutes from "./routes/admin.js";
+import cartRoutes from "./routes/cart.js";
+import checkoutRoutes from "./routes/checkout.js";
+import orderRoutes from "./routes/orders.js";
 import { requireAdmin, requireAuth } from "./middleware/auth.js";
 import { UPLOADS_DIR } from "./upload.js";
 
 if (!process.env.JWT_SECRET) {
   console.error("Falta JWT_SECRET en el archivo .env");
   process.exit(1);
+}
+
+// Sin clave de Stripe la tienda funciona, pero el checkout va a fallar.
+if (!process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") ||
+    process.env.STRIPE_SECRET_KEY === "sk_test_reemplazar") {
+  console.warn("Aviso: STRIPE_SECRET_KEY no está configurada. El checkout no va a funcionar.");
 }
 
 const app = express();
@@ -26,6 +35,11 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+
+// Carrito, checkout y órdenes son solo para usuarios logueados.
+app.use("/api/cart", requireAuth, cartRoutes);
+app.use("/api/checkout", requireAuth, checkoutRoutes);
+app.use("/api/orders", requireAuth, orderRoutes);
 
 // Todo /api/admin pasa primero por requireAuth (¿hay sesión?)
 // y después por requireAdmin (¿es ADMIN?). La protección real está acá,

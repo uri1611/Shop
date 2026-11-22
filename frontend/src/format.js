@@ -6,3 +6,23 @@ export function formatPrice(cents) {
     currency: "USD",
   });
 }
+
+// Texto en español para cada estado de una orden.
+const ORDER_STATUS_LABELS = {
+  PENDING: "Pendiente de pago",
+  PAID: "Pagada",
+  FAILED: "Falló el pago",
+  CANCELLED: "Cancelada",
+};
+
+export function formatOrderStatus(status) {
+  return ORDER_STATUS_LABELS[status] || status;
+}
+
+// Fecha legible, ej: "22/11/2026, 18:30".
+export function formatDate(isoString) {
+  return new Date(isoString).toLocaleString("es-UY", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+}
