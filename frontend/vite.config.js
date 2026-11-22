@@ -5,10 +5,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    // Todo lo que empiece con /api se reenvía al backend.
-    // Así el frontend llama a "/api/..." sin preocuparse por CORS.
+    // Lo que empiece con /api o /uploads se reenvía al backend.
+    // Así el frontend usa rutas relativas sin preocuparse por CORS.
     proxy: {
       "/api": "http://localhost:3000",
+      "/uploads": "http://localhost:3000",
     },
   },
 });

@@ -1,6 +1,10 @@
 import express from "express";
+import multer from "multer";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
+import adminRoutes from "./routes/admin.js";
+import { requireAdmin, requireAuth } from "./middleware/auth.js";
+import { UPLOADS_DIR } from "./upload.js";
 
 if (!process.env.JWT_SECRET) {
   console.error("Falta JWT_SECRET en el archivo .env");
@@ -12,12 +16,21 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Las imágenes subidas se sirven como archivos estáticos:
+// backend/uploads/abc.jpg  ->  http://localhost:3000/uploads/abc.jpg
+app.use("/uploads", express.static(UPLOADS_DIR));
+
 app.get("/api/health", (_req, res) => {
   res.json({ message: "Backend funcionando" });
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+
+// Todo /api/admin pasa primero por requireAuth (¿hay sesión?)
+// y después por requireAdmin (¿es ADMIN?). La protección real está acá,
+// en el backend; ocultar el link en el frontend es solo cosmético.
+app.use("/api/admin", requireAuth, requireAdmin, adminRoutes);
 
 // Cualquier otra ruta /api que no exista.
 app.use("/api", (_req, res) => {
@@ -29,6 +42,20 @@ app.use("/api", (_req, res) => {
 app.use((error, _req, res, _next) => {
   if (error.type === "entity.parse.failed") {
     return res.status(400).json({ error: "El body no es un JSON válido" });
+  }
+
+  // Errores de multer al subir archivos (ej: archivo demasiado grande).
+  if (error instanceof multer.MulterError) {
+    const message =
+      error.code === "LIMIT_FILE_SIZE"
+        ? "La imagen no puede pesar más de 5 MB"
+        : "No se pudo procesar el archivo";
+    return res.status(400).json({ error: message });
+  }
+
+  // Errores que nosotros creamos con un status (ej: tipo de imagen inválido).
+  if (error.status) {
+    return res.status(error.status).json({ error: error.message });
   }
 
   console.error(error);

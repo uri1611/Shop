@@ -1,9 +1,12 @@
 import { Link, Route, Routes } from "react-router-dom";
 import { useAuth } from "./AuthContext.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 import CatalogPage from "./pages/CatalogPage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import AdminProductsPage from "./pages/AdminProductsPage.jsx";
+import AdminProductFormPage from "./pages/AdminProductFormPage.jsx";
 
 export default function App() {
   const { user, loading, logout } = useAuth();
@@ -20,6 +23,8 @@ export default function App() {
         <nav>
           {user ? (
             <>
+              {/* El link solo se muestra a ADMIN, pero la protección real está en el backend */}
+              {user.role === "ADMIN" && <Link to="/admin/products">Admin</Link>}
               <span>
                 {user.email} ({user.role})
               </span>
@@ -40,6 +45,31 @@ export default function App() {
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+
+          <Route
+            path="/admin/products"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminProductsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/products/new"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminProductFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/products/:id"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminProductFormPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </>
