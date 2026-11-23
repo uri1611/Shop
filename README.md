@@ -60,7 +60,7 @@ Después:
 
 ```bash
 npx prisma migrate dev     # crea la base SQLite con las tablas
-npm run db:seed            # carga usuarios y productos de ejemplo
+npm run db:seed            # carga usuarios y productos de ejemplo (con imágenes)
 npm run dev                # http://localhost:3000
 ```
 
@@ -96,6 +96,8 @@ Los crea el seed:
 | CUSTOMER | `cliente@example.com` | `cliente123` |
 
 También podés registrar usuarios nuevos; siempre se crean como CUSTOMER.
+
+El seed también copia las imágenes de ejemplo de `backend/prisma/seed-images/` a `backend/uploads/`, así el catálogo arranca con fotos. Las imágenes que suba un admin no están en el repo: se guardan en `backend/uploads/`, que está en `.gitignore`.
 
 ## Tarjetas de prueba de Stripe
 

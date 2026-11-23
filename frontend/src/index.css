@@ -66,7 +66,7 @@ button {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
 }
 
@@ -85,7 +85,9 @@ button {
 .product-image {
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
+  /* contain: la foto entra entera, sin recortarse */
+  object-fit: contain;
+  background: white;
   border-radius: 4px;
 }
 
@@ -99,7 +101,8 @@ button {
 
 .detail {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* la imagen del detalle ocupa como máximo 320px */
+  grid-template-columns: minmax(0, 320px) 1fr;
   gap: 24px;
   margin-top: 16px;
 }
